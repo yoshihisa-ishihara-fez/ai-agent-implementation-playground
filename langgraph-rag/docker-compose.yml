@@ -1,0 +1,12 @@
+services:
+  agent:
+    build: .
+    env_file: [.env]
+    volumes:
+      - ./:/app
+      - chroma-data:/app/chroma_db
+    tty: true
+    stdin_open: true
+
+volumes:
+  chroma-data:
