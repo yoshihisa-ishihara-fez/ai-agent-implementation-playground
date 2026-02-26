@@ -1,0 +1,8 @@
+services:
+  agent:
+    build: .
+    env_file: [.env]
+    volumes:
+      - ./:/app
+    tty: true
+    stdin_open: true
