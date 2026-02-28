@@ -9,7 +9,7 @@ from tools import list_files, read_file
 
 
 def _get_model() -> Gemini:
-    model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+    model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-pro")
     return Gemini(id=model_name)
 
 
