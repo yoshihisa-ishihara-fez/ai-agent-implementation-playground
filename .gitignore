@@ -82,4 +82,4 @@ Temporary Items
 .env.local
 .env.*.local
 
-doc/
+**/docs/**
