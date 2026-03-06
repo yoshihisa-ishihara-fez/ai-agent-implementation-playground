@@ -1,0 +1,9 @@
+services:
+  agent:
+    build: .
+    env_file: [.env]
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    tty: true
+    stdin_open: true
