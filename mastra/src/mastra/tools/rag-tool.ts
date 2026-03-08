@@ -18,8 +18,8 @@ export const searchKnowledgeBaseTool = createTool({
       })
     ),
   }),
-  execute: async ({ context }) => {
-    const results = await searchSimilar(context.query, 5);
+  execute: async (inputData) => {
+    const results = await searchSimilar(inputData.query, 5);
     return { results };
   },
 });

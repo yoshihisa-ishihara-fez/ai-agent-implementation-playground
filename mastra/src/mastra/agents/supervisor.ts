@@ -25,8 +25,8 @@ const delegateToRagAgentTool = createTool({
     question: z.string().describe("RAGエージェントへの質問"),
   }),
   outputSchema: z.object({ answer: z.string() }),
-  execute: async ({ context }) => {
-    const result = await ragAgent.generate(context.question);
+  execute: async (inputData) => {
+    const result = await ragAgent.generate(inputData.question);
     return { answer: result.text };
   },
 });
@@ -39,8 +39,8 @@ const delegateToFileAgentTool = createTool({
     instruction: z.string().describe("ファイル操作エージェントへの指示"),
   }),
   outputSchema: z.object({ result: z.string() }),
-  execute: async ({ context }) => {
-    const result = await fileAgent.generate(context.instruction);
+  execute: async (inputData) => {
+    const result = await fileAgent.generate(inputData.instruction);
     return { result: result.text };
   },
 });
@@ -53,8 +53,8 @@ const delegateToAnalystAgentTool = createTool({
     content: z.string().describe("分析対象のテキストコンテンツ"),
   }),
   outputSchema: z.object({ analysis: z.string() }),
-  execute: async ({ context }) => {
-    const result = await analystAgent.generate(context.content);
+  execute: async (inputData) => {
+    const result = await analystAgent.generate(inputData.content);
     return { analysis: result.text };
   },
 });

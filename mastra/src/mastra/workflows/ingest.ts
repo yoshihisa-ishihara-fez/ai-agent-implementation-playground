@@ -90,7 +90,7 @@ const chunkStep = createStep({
       });
       const chunks = await doc.chunk({
         strategy: "recursive",
-        size: CHUNK_SIZE,
+        maxSize: CHUNK_SIZE,
         overlap: CHUNK_OVERLAP,
       });
 
