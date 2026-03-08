@@ -36,7 +36,8 @@ export const readFileTool = createTool({
       .describe("ファイル名（パス区切り文字なし、例: sample1.txt）"),
   }),
   outputSchema: z.object({ content: z.string() }),
-  execute: async ({ context: { filename: rawFilename } }) => {
+  execute: async (inputData) => {
+    const rawFilename = inputData.filename;
     const filename = rawFilename.trim();
 
     if (!filename || filename.includes("/") || filename.includes("\\") || filename.startsWith(".")) {

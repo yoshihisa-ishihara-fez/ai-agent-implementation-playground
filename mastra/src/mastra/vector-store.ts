@@ -6,9 +6,13 @@
  */
 
 import { embedMany, embed } from "ai";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
-const EMBEDDING_MODEL = google.textEmbeddingModel("text-embedding-004");
+// text-embedding-004 は v1 API でのみ動作するため baseURL を明示的に指定
+const googleV1 = createGoogleGenerativeAI({
+  baseURL: "https://generativelanguage.googleapis.com/v1",
+});
+const EMBEDDING_MODEL = googleV1.textEmbeddingModel("text-embedding-004");
 
 interface VectorEntry {
   id: string;
