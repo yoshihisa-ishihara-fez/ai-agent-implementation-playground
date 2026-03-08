@@ -3,16 +3,25 @@
  *
  * デモ用のシンプルなベクトルストア。
  * 本番環境では @mastra/pg（pgvector）などの永続化ストアを推奨。
+ *
+ * Embedding: paraphrase-multilingual-MiniLM-L12-v2（ローカル実行）
  */
 
-import { embedMany, embed } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { pipeline, env } from "@huggingface/transformers";
 
-// text-embedding-004 は v1 API でのみ動作するため baseURL を明示的に指定
-const googleV1 = createGoogleGenerativeAI({
-  baseURL: "https://generativelanguage.googleapis.com/v1",
-});
-const EMBEDDING_MODEL = googleV1.textEmbeddingModel("text-embedding-004");
+env.cacheDir = process.env.HF_CACHE_DIR ?? ".cache/transformers";
+
+const MODEL_ID = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+
+type EmbeddingPipeline = Awaited<ReturnType<typeof pipeline<"feature-extraction">>>;
+let _pipe: EmbeddingPipeline | null = null;
+
+async function getEmbeddingPipeline(): Promise<EmbeddingPipeline> {
+  if (!_pipe) {
+    _pipe = await pipeline("feature-extraction", MODEL_ID);
+  }
+  return _pipe;
+}
 
 interface VectorEntry {
   id: string;
@@ -44,10 +53,12 @@ export async function upsertChunks(
 ): Promise<void> {
   if (chunks.length === 0) return;
 
-  const { embeddings } = await embedMany({
-    model: EMBEDDING_MODEL,
-    values: chunks.map((c) => c.text),
+  const pipe = await getEmbeddingPipeline();
+  const output = await pipe(chunks.map((c) => c.text), {
+    pooling: "mean",
+    normalize: true,
   });
+  const embeddings = output.tolist() as number[][];
 
   chunks.forEach((chunk, i) => {
     store.push({
@@ -68,10 +79,9 @@ export async function searchSimilar(
 ): Promise<Array<{ text: string; filename: string; score: number }>> {
   if (store.length === 0) return [];
 
-  const { embedding } = await embed({
-    model: EMBEDDING_MODEL,
-    value: query,
-  });
+  const pipe = await getEmbeddingPipeline();
+  const output = await pipe([query], { pooling: "mean", normalize: true });
+  const [embedding] = output.tolist() as number[][];
 
   return store
     .map((entry) => ({

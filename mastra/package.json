@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.0.0",
+    "@huggingface/transformers": "^3.0.0",
     "@mastra/core": "^1.10.0",
     "@mastra/rag": "^2.1.2",
     "ai": "^4.0.0",
