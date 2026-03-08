@@ -12,7 +12,7 @@ import { supervisorAgent } from "./mastra/agents/supervisor.js";
 
 async function runIngestWorkflow(): Promise<void> {
   const workflow = mastra.getWorkflow("ingestWorkflow");
-  const run = workflow.createRun();
+  const run = await workflow.createRun();
   await run.start({ inputData: { inputsDir: "inputs" } });
 }
 
