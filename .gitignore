@@ -83,3 +83,6 @@ Temporary Items
 .env.*.local
 
 **/docs/**
+
+**/node_modules/**
+**/.mastra/**

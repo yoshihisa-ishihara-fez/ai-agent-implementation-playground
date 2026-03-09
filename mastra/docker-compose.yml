@@ -1,4 +1,11 @@
 services:
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+
   agent:
     build: .
     env_file: [.env]
@@ -7,3 +14,11 @@ services:
       - /app/node_modules
     tty: true
     stdin_open: true
+    depends_on:
+      - chromadb
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+
+volumes:
+  chroma-data:
